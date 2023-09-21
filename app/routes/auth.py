@@ -7,23 +7,24 @@ from app.util import  email_check , user_check ,set_password
 from app.dob import  insert_user
 
 auth=Blueprint("/auth",__name__)
+
 @auth.route('/login', methods =['POST'])
 def login():
     json_body = request.get_json()    
     if request.method == 'POST':
            userpassword = json_body['userpassword']
-           
            email = json_body['email'] 
            check_email=db.session.query(User).filter_by(email=email).first()           
            if check_email is None:
                return jsonify({'msg':"Signup Please"})
                
            else:                  
-               token = jwt.encode({'exp' :str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))
-               return jsonify(message="Login successfully", access_token=token)
+               token = jwt.encode({'your id is' :str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))
+               tok="your id is "+token
+               return jsonify(message="Login successfully", access_token=tok)
                
      
-auth=Blueprint("/auth",__name__)
+
 @auth.route('/signup', methods =['POST'])
 def singup():
     json_body = request.get_json()
@@ -34,19 +35,34 @@ def singup():
     
     email_ans=email_check(email)
     user_ans=user_check(username)
-    if confirmpwd == userpassword: 
-            if email_ans==True and user_ans==True :
+    if confirmpwd != userpassword: 
+             msg="Password and confirm password should be same"
+             return jsonify({"message  ": msg})  
+                
+    else:
+         if email_ans ==True:
+               if  user_ans==True :
                     hash_password=set_password(userpassword)    
                     msg=insert_user(email,hash_password,username)
                     return jsonify({"msg": msg})
-            else :
+               else:
+                    msg="Please enter a valid username"
+                    return jsonify({"message  ": msg})  
+         else :
                 msg="Please enter a valid email address"
                 return jsonify({"message  ": msg})    
-                
-    else:
-         msg="Password and confirm password should be same"
-         return jsonify({"message  ": msg})    
+             
         
     
 
 
+  
+
+
+
+
+
+
+       
+
+       

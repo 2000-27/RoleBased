@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash ,check_password_hash
 import re 
 
 def email_check(email):
@@ -17,6 +17,5 @@ def user_check(username):
 
 def set_password(password):
         password_hash = generate_password_hash(password)
-        print("your password is ",password)
-        print("your hash password is ",password_hash)
         return password_hash
+
