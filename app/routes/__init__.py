@@ -1,2 +1,1 @@
-from .sign import *
-from .login import *
+from .auth import *

@@ -9,6 +9,7 @@ class User(Base):
     email = Column(String, unique=True)
     password =Column(String(), nullable=False)
     role_id = Column(Integer(), ForeignKey('role.id'),default=3)
+    username=Column(String(),nullable=False)
     
 
 class Role(Base):

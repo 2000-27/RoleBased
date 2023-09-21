@@ -8,10 +8,10 @@ db = SQLAlchemy()
 ma = Marshmallow()
 
 app = Flask(__name__)
-from .routes import sign , Login
+from .routes import auth
 
 app.config.from_object(DevConfig)
-app.register_blueprint(Login, url_prefix='/api')
-app.register_blueprint(sign, url_prefix='/api')
+app.register_blueprint(auth, url_prefix='/api')
+
 
 db.init_app(app)   

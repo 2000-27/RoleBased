@@ -7,7 +7,7 @@ def insert_user(email,password,username):
     if  check_email is not None  :
          msg="Email is Already Registered"      
     else: 
-         new_User=User(email=email,password=password)
+         new_User=User(email=email,password=password,username=username)
          db.session.add(new_User)
          db.session.commit()         
          msg="Registration successfull"
