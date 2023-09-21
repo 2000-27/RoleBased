@@ -17,4 +17,6 @@ def user_check(username):
 
 def set_password(password):
         password_hash = generate_password_hash(password)
+        print("your password is ",password)
+        print("your hash password is ",password_hash)
         return password_hash
