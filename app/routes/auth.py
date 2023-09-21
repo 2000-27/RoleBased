@@ -19,7 +19,7 @@ def login():
                return jsonify({'msg':"Signup Please"})
                
            else:                  
-               token = jwt.encode({'public_id': 1,'exp' :str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))
+               token = jwt.encode({'exp' :str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))
                return jsonify(message="Login successfully", access_token=token)
                
      
@@ -34,17 +34,19 @@ def singup():
     
     email_ans=email_check(email)
     user_ans=user_check(username)
-    if email_ans==True and user_ans==True :
-        if confirmpwd == userpassword:   
-            hash_password=set_password(userpassword)    
-            msg=insert_user(email,hash_password,username)
-            return jsonify({"msg": msg})
-    else :
-      msg="Please enter a valid email address"
-      return jsonify({"message  ": msg})    
-           
-
- 
+    if confirmpwd == userpassword: 
+            if email_ans==True and user_ans==True :
+                    hash_password=set_password(userpassword)    
+                    msg=insert_user(email,hash_password,username)
+                    return jsonify({"msg": msg})
+            else :
+                msg="Please enter a valid email address"
+                return jsonify({"message  ": msg})    
+                
+    else:
+         msg="Password and confirm password should be same"
+         return jsonify({"message  ": msg})    
+        
     
 
 
