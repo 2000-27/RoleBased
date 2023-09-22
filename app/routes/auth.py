@@ -14,14 +14,13 @@ def login():
     if request.method == 'POST':
            userpassword = json_body['userpassword']
            email = json_body['email'] 
-           check_email=db.session.query(User).filter_by(email=email).first()           
-           if check_email is None:
-               return jsonify({'msg':"Signup Please"})
-               
-           else:                  
-               token = jwt.encode({'your id is' :str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))
-               tok="your id is "+token
-               return jsonify(message="Login successfully", access_token=tok)
+           check_user=db.session.query(User).filter_by(email=email).first()           
+           if check_user is None:
+               return jsonify({'msg':"Signup Please"})                
+           else:  
+               id=check_user.role_id
+               token = jwt.encode({str(id) : str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))      
+               return jsonify(message="Login successfully" , access_token=token)
                
      
 
@@ -32,7 +31,6 @@ def singup():
     email = json_body['email']
     userpassword = json_body['userpassword']
     confirmpwd = json_body['confirmpwd']
-    
     email_ans=email_check(email)
     user_ans=user_check(username)
     if confirmpwd != userpassword: 
