@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
-
+from pathlib import Path
 load_dotenv()
-base_dir = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = Path(__file__).resolve().parent.parent
 class DevConfig(object):
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = base_dir+"sqlite:////data.db"
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{BASE_DIR}/data.db"
     SECRET_KEY = os.environ['SECRET_KEY']
