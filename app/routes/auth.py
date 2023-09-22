@@ -19,7 +19,7 @@ def login():
                return jsonify({'msg':"Signup Please"})                
            else:  
                id=check_user.role_id
-               token = jwt.encode({str(id) : str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))      
+               token = jwt.encode({'user_id': str(id), 'exp' : str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))    
                return jsonify(message="Login successfully" , access_token=token)
                
      
