@@ -18,8 +18,11 @@ def login():
            if check_user is None:
                return jsonify({'msg':"Signup Please"})                
            else:  
-               id=check_user.role_id
-               token = jwt.encode({'user_id': str(id), 'exp' : str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))    
+               role_id=check_user.role_id
+               user_id=check_user.id
+               
+               token = jwt.encode({'user_role_id': str(role_id),'user_id': str(user_id), 'exp' :  datetime.utcnow() + timedelta(minutes = 30) }, current_app.config.get('SECRET_KEY'))   
+                
                return jsonify(message="Login successfully" , access_token=token)
                
      
