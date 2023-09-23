@@ -1,15 +1,12 @@
-from flask import request , jsonify , Blueprint
-from app.dob import insert_into_db
-from app.util import token_access
+from flask import request , jsonify , Blueprint 
+from app.dob import insert_into_db 
+from app.util import  admin_required
+
 admin_bp = Blueprint("create-user",__name__)
-   
 @admin_bp.route('/create-user', methods =['POST'])
-@token_access
-def  create(user_id,role_id):
-    if role_id is not  "1":
-        msg="you can't access this page"
-        return jsonify({"msg":msg})        
-    else:   
+
+@admin_required
+def create():         
       json_body = request.get_json()
       username = json_body['username']
       email = json_body['email']
