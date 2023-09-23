@@ -3,9 +3,7 @@ from datetime import datetime,timedelta
 from app import db 
 from app.model import User
 import jwt
-from app.util import  email_check , user_check ,set_password 
-from app.dob import  insert_user
-
+from app.dob import  insert_into_db
 auth=Blueprint("/auth",__name__)
 
 @auth.route('/login', methods =['POST'])
@@ -18,8 +16,10 @@ def login():
            if check_user is None:
                return jsonify({'msg':"Signup Please"})                
            else:  
-               id=check_user.role_id
-               token = jwt.encode({'user_id': str(id), 'exp' : str( datetime.utcnow() + timedelta(minutes = 30)) }, current_app.config.get('SECRET_KEY'))    
+               role_id=check_user.role_id
+               user_id=check_user.id
+               
+               token = jwt.encode({'user_role_id': str(role_id),'user_id': str(user_id), 'exp' :  datetime.utcnow() + timedelta(minutes = 30) }, current_app.config.get('SECRET_KEY'))   
                return jsonify(message="Login successfully" , access_token=token)
                
      
@@ -31,27 +31,9 @@ def singup():
     email = json_body['email']
     userpassword = json_body['userpassword']
     confirmpwd = json_body['confirmpwd']
-    email_ans=email_check(email)
-    user_ans=user_check(username)
-    if confirmpwd != userpassword: 
-             msg="Password and confirm password should be same"
-             return jsonify({"message  ": msg})  
-                
-    else:
-         if email_ans ==True:
-               if  user_ans==True :
-                    hash_password=set_password(userpassword)    
-                    msg=insert_user(email,hash_password,username)
-                    return jsonify({"msg": msg})
-               else:
-                    msg="Please enter a valid username"
-                    return jsonify({"message  ": msg})  
-         else :
-                msg="Please enter a valid email address"
-                return jsonify({"message  ": msg})    
-             
-        
-    
+    role_id=json_body['role_id']
+    msg=insert_into_db(username,email,userpassword,confirmpwd,role_id)
+    return jsonify({"msg":msg})
 
 
   
