@@ -20,7 +20,7 @@ def insert_into_db(username,email,userpassword,confirmpwd,role_id=3):
     msg=''
     email_ans=email_check(email)
     user_ans=user_check(username)
-    if confirmpwd is not  userpassword: 
+    if confirmpwd !=  userpassword: 
              msg="Password and confirm password should be same"
              return msg  
                 
