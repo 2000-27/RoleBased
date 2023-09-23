@@ -1,4 +1,4 @@
-from flask import request , jsonify , Blueprint
+from flask import request , jsonify , Blueprint ,abort
 from app.dob import insert_into_db
 from app.util import token_access
 manager_mp=Blueprint("/create",__name__)
@@ -6,10 +6,9 @@ manager_mp=Blueprint("/create",__name__)
 @manager_mp.route('/create', methods =['POST'])
 @token_access
 def  create(user_id,role_id):
-    print("your role id is ",role_id)
-    if role_id is not "2":
-       msg="You are not authorized  "
-       return jsonify({"msg":msg})
+    
+    if role_id != "2":
+       abort(401)
     else:
         json_body = request.get_json()
         username = json_body['username']
