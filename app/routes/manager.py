@@ -1,13 +1,11 @@
 from flask import request , jsonify , Blueprint 
 from app.dob import insert_into_db 
-from app.util import token_required , admin_required
+from app.util import admin_required
 manager_mp=Blueprint("/create",__name__)
 @manager_mp.route('/create', methods =['POST'])
 
-@token_required
-def create(user_id,user_role_id,decode):
-        role_name=admin_required(decode) 
-        print("your role name is ",role_name)
+@admin_required
+def create():
         json_body = request.get_json()
         username = json_body['username']
         email = json_body['email']
