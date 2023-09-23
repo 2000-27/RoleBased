@@ -1,32 +1,24 @@
-from flask import request , jsonify ,current_app,Blueprint
-import jwt 
-from app.util import role
-
+from flask import request , jsonify , Blueprint
 from app.dob import insert_into_db
-Admin=Blueprint("/Admin/data",__name__)
-def token_access(f):
-      def decorator(*args, **kwargs):
-            payload=request.headers["Authorization"]
-            try:
-                  payload = payload.split(" ")[1]
-                  decoded_jwt=jwt.decode(payload, current_app.config.get('SECRET_KEY'), algorithms=["HS256"])
-                  role_name=role(decoded_jwt)
-                  if role_name !="ADMIN":
-                        return jsonify({"message": " Only admin can access!!!"})
-                                          
-            except  Exception as err:
-                  print("your error is ",err)
-                  return jsonify({"message": "Invalid token!"})
-            return f(role_name, *args, **kwargs)
-      return decorator     
-               
+from app.util import token_access
+admin_bp = Blueprint("create-user",__name__)
    
-@Admin.route('/Admin/data', methods =['POST'])
+@admin_bp.route('/create-user', methods =['POST'])
 @token_access
-def  admins(current_user):
-    msg=insert_into_db()
-    return jsonify({"msg":msg})
-    
+def  create(user_id,role_id):
+    if role_id is not  "1":
+        msg="you can't access this page"
+        return jsonify({"msg":msg})        
+    else:   
+      json_body = request.get_json()
+      username = json_body['username']
+      email = json_body['email']
+      userpassword = json_body['userpassword']
+      confirmpwd = json_body['confirmpwd']
+      role_id=json_body['role_id']
+      msg=insert_into_db(username,email,userpassword,confirmpwd,role_id)
+      return jsonify({"msg":msg})
+      
 
 
 

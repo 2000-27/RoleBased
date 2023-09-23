@@ -1,12 +1,12 @@
 from app import db
 from app.model import  User
-from flask import request,jsonify
+from flask import request, jsonify
 from app.util import email_check,user_check,set_password
 
-def insert_user(email,password,username,role_id):
+def insert_user(email, password, username, role_id):
     msg=''
-    check_email=db.session.query(User).filter_by(email=email).first()
-    if  check_email is not None  :
+    is_user_exists=db.session.query(User).filter_by(email=email).first()
+    if  is_user_exists is not None  :
          msg="Email is Already Registered"      
     else: 
          new_User=User(email=email,password=password,username=username,role_id=role_id)
@@ -17,14 +17,8 @@ def insert_user(email,password,username,role_id):
     return msg
 
 
-def insert_into_db():
+def insert_into_db(username,email,userpassword,confirmpwd,role_id=3):
     msg=''
-    json_body = request.get_json()
-    username = json_body['username']
-    email = json_body['email']
-    userpassword = json_body['userpassword']
-    confirmpwd = json_body['confirmpwd']
-    role_id=json_body['role_id']
     email_ans=email_check(email)
     user_ans=user_check(username)
     if confirmpwd != userpassword: 

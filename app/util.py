@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash ,check_password_hash
-import re 
+from flask import request , jsonify , current_app
+import re , jwt  
 from app import db
 from app.model import Role
 
@@ -27,3 +28,21 @@ def role(decoded_jwt):
        user_role_id=decoded_jwt['user_role_id']
        roles=db.session.query(Role).filter_by(id=user_role_id).first() 
        return roles.role_name 
+
+
+def token_access(f):
+      def decorator(*args, **kwargs):
+            payload=request.headers["Authorization"]
+            try:
+                  payload = payload.split(" ")[1]
+                  decoded_jwt=jwt.decode(payload, current_app.config.get('SECRET_KEY'), algorithms=["HS256"])
+                  user_id=decoded_jwt['user_id']
+                  user_role_id=decoded_jwt['user_role_id']
+                  
+               
+            except  Exception as err:
+                  print("your error is ",err)
+                  return jsonify({"message": "Invalid token!"})
+            return f(user_id,user_role_id, *args, **kwargs)
+      return decorator     
+  

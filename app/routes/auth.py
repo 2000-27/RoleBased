@@ -18,6 +18,7 @@ def login():
            else:  
                role_id=check_user.role_id
                user_id=check_user.id
+               
                token = jwt.encode({'user_role_id': str(role_id),'user_id': str(user_id), 'exp' :  datetime.utcnow() + timedelta(minutes = 30) }, current_app.config.get('SECRET_KEY'))   
                return jsonify(message="Login successfully" , access_token=token)
                
@@ -25,8 +26,13 @@ def login():
 
 @auth.route('/signup', methods =['POST'])
 def singup():
-    msg=insert_into_db()
-    print("your error is ",msg)
+    json_body = request.get_json()
+    username = json_body['username']
+    email = json_body['email']
+    userpassword = json_body['userpassword']
+    confirmpwd = json_body['confirmpwd']
+    role_id=json_body['role_id']
+    msg=insert_into_db(username,email,userpassword,confirmpwd,role_id)
     return jsonify({"msg":msg})
 
 

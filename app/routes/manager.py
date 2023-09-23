@@ -1,34 +1,28 @@
-from flask import request , jsonify ,current_app,Blueprint
-import jwt 
+from flask import request , jsonify , Blueprint
 from app.dob import insert_into_db
-from app.util import role
-Manager=Blueprint("/Manager/data",__name__)
-def token_access(f):
-      def decorator(*args, **kwargs):
-            payload=request.headers["Authorization"]
-            try:
-                  payload = payload.split(" ")[1]
-                  decoded_jwt=jwt.decode(payload, current_app.config.get('SECRET_KEY'), algorithms=["HS256"])
-                  role_name=role(decoded_jwt)
-                  if role_name !="MANAGER":
-                        return jsonify({"message": " Only manager can access!!!"})
-                                          
-            except  :
-                    return jsonify({"message": "Invalid token!"})
-            return f(role_name, *args, **kwargs)
-      return decorator     
-               
+from app.util import token_access
+manager_mp=Blueprint("/create",__name__)
    
-@Manager.route('/Manager/data', methods =['POST'])
+@manager_mp.route('/create', methods =['POST'])
 @token_access
-def  manager(current_user):
-    msg=insert_into_db()
-    return jsonify({"msg":msg})
-    
+def  create(user_id,role_id):
+    print("your role id is ",role_id)
+    if role_id is not "2":
+       msg="You are not authorized  "
+       return jsonify({"msg":msg})
+    else:
+        json_body = request.get_json()
+        username = json_body['username']
+        email = json_body['email']
+        userpassword = json_body['userpassword']
+        confirmpwd = json_body['confirmpwd']
+        role_id=json_body['role_id']
+        msg=insert_into_db(username,email,userpassword,confirmpwd,role_id)
+        return jsonify({"msg":msg})
+        
 
 
-
-         
+      
             
             
 
