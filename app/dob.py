@@ -1,6 +1,5 @@
 from app import db
 from app.model import  User
-from flask import request, jsonify
 from app.util import email_check,user_check,set_password
 
 def insert_user(email, password, username, role_id):
@@ -21,7 +20,7 @@ def insert_into_db(username,email,userpassword,confirmpwd,role_id=3):
     msg=''
     email_ans=email_check(email)
     user_ans=user_check(username)
-    if confirmpwd != userpassword: 
+    if confirmpwd !=  userpassword: 
              msg="Password and confirm password should be same"
              return msg  
                 
