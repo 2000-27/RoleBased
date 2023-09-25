@@ -59,7 +59,7 @@ def admin_required(f):
                decoded_jwt=token_decode(payload)  
                user_id=decoded_jwt['user_id']
                user_role_id=decoded_jwt['user_role_id'] 
-
+               
                
             except  Exception as err:
                   print("your error is ",err)
